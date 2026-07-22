@@ -87,10 +87,11 @@ def search_hoax(
         return run_lexical_fallback(q, limit)
 
     try:
-        # Panggil Gemini API text-embedding-004
+        # Panggil Gemini API gemini-embedding-2 dengan dimensi 768
         response = client.models.embed_content(
-            model="text-embedding-004",
-            contents=q
+            model="gemini-embedding-2",
+            contents=q,
+            config={"output_dimensionality": 768}
         )
         query_vector = response.embeddings[0].values
 

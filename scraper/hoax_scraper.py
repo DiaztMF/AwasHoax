@@ -19,14 +19,17 @@ HEADERS = {
 def get_latest_urls(pages=1):
     urls = []
     for page in range(1, pages + 1):
-        url = f"https://turnbackhoax.id/page/{page}/"
+        if page == 1:
+            url = "https://turnbackhoax.id/"
+        else:
+            url = f"https://turnbackhoax.id/page/{page}/"
         try:
             r = requests.get(url, headers=HEADERS, timeout=10)
             if r.status_code != 200:
                 continue
             soup = BeautifulSoup(r.text, 'html.parser')
-            # Tema mh-themes menggunakan class entry-title untuk judul loop artikel
-            titles = soup.select(".entry-title a")
+            # Penyelarasan pemilih dengan struktur web terbaru (tag a yang membungkus h3)
+            titles = soup.select("a:has(h3)")
             for t in titles:
                 href = t.get("href")
                 if href and href not in urls:
@@ -59,20 +62,20 @@ def scrape_article_detail(url):
             return None
         soup = BeautifulSoup(r.text, 'html.parser')
         
-        # Ekstrak Judul
-        title_el = soup.select_one(".entry-title")
+        # Ekstrak Judul (menggunakan tag h1 utama di halaman artikel detail)
+        title_el = soup.select_one("h1")
         title = title_el.get_text(strip=True) if title_el else "No Title"
         
-        # Ekstrak Isi/Ringkasan
-        content_el = soup.select_one(".entry-content")
+        # Ekstrak Isi/Ringkasan (menggunakan section.article-origin atau fallback ke tag article)
+        content_el = soup.select_one("section.article-origin")
+        if not content_el:
+            content_el = soup.select_one("article")
         summary = content_el.get_text(strip=True) if content_el else "No Content"
         
-        # Ekstrak Tanggal Publikasi (biasanya ada di class .entry-meta-date atau tag time)
-        date_el = soup.select_one(".entry-meta-date, time")
+        # Ekstrak Tanggal Publikasi (menggunakan tag time dengan atribut datetime jika ada)
+        date_el = soup.select_one("time")
         date_str = None
         if date_el:
-            # Sederhanakan parsing tanggal atau biarkan kosong agar DB mengisi default
-            # Di WordPress biasanya datetime attribute
             date_str = date_el.get("datetime")
             if not date_str:
                 date_str = date_el.get_text(strip=True)
@@ -90,8 +93,9 @@ def scrape_article_detail(url):
 def get_embedding(client, text):
     try:
         response = client.models.embed_content(
-            model="text-embedding-004",
-            contents=text
+            model="gemini-embedding-2",
+            contents=text,
+            config={"output_dimensionality": 768}
         )
         return response.embeddings[0].values
     except Exception as e:
