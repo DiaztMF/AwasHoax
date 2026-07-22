@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
 });
 
@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sistem Deteksi & Pencarian Semantik Berita Hoaks",
-  description: "Platform analisis data dan verifikasi fakta berbasis AI menggunakan pencarian semantik (vector embeddings) untuk melacak misinformasi secara real-time.",
+  title: "AwasHoax - Cek Kebenaran & Fakta Berita",
+  description: "Platform verifikasi fakta berita hoaks Indonesia secara cerdas dan akurat.",
 };
 
 export default function RootLayout({
@@ -24,10 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
+      lang="id"
+      className={`${plusJakarta.variable} ${geistMono.variable} dark h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">{children}</body>
+      <body className="min-h-full flex flex-col bg-background text-foreground font-sans">{children}</body>
     </html>
   );
 }
