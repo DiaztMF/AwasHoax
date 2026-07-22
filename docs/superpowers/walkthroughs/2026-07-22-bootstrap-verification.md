@@ -1,33 +1,12 @@
-# Laporan Verifikasi Pengujian (Verification Walkthrough)
+# Laporan Verifikasi Pengujian & Implementasi UI (Verification Walkthrough)
 
-Dokumen ini merekam hasil verifikasi pengujian unit (*unit testing*) untuk memastikan fungsionalitas dan logika dari backend API (FastAPI) dan scraper TurnBackHoax.id berjalan 100% tanpa error dalam kondisi simulasi (*mocking*).
-
----
-
-## 1. Spesifikasi Uji Coba (Test Suite Specifications)
-
-Uji coba diimplementasikan di dalam direktori `Hoax Detection Web/tests` menggunakan pustaka `pytest` dan `unittest.mock` bawaan Python untuk mengisolasi logika dari panggilan jaringan eksternal (API Gemini & database Neon).
-
-### A. Uji Coba Backend (`test_backend.py`)
-*   **`test_get_latest_hoaxes`:** Memastikan API mengambil daftar berita terbaru secara cepat tanpa kueri vektor, memverifikasi SQL dinamis dan format batas pengambilan (*limit*).
-*   **`test_get_stats`:** Memverifikasi kueri statistik total data berjalan sukses.
-*   **`test_search_hoax_semantic_success`:** Memverifikasi pencarian semantik (vektor) menggunakan operator `<=>` pgvector ter-eksekusi dengan input embedding berdimensi 768 dari model `text-embedding-004`.
-*   **`test_search_hoax_lexical_fallback_on_api_error`:** Menguji mekanisme ketahanan sistem (*graceful degradation*) di mana jika API Gemini mati/limit, sistem langsung beralih (*fallback*) ke pencarian leksikal `ILIKE` dengan wildcard secara transparan.
-
-### B. Uji Coba Scraper (`test_scraper.py`)
-*   **`test_get_latest_urls`:** Menguji parsing HTML halaman utama TurnBackHoax.id untuk mengekstrak URL artikel terbaru dari elemen `.entry-title`.
-*   **`test_filter_existing_urls`:** Menguji filter duplikat massal (*Batch Check*) agar database hanya memproses URL baru (menyelesaikan masalah *N+1 query*).
-*   **`test_scrape_article_detail`:** Memverifikasi detail ekstraksi konten, judul, dan tanggal publikasi dari detail artikel WordPress.
-*   **`test_scraper_main_loop`:** Memverifikasi alur kerja penuh dari pengambilan URL, filter DB, request embedding Gemini, dan eksekusi insert aman `ON CONFLICT DO NOTHING` dengan jeda *rate limiting* 1,5 detik.
+Dokumen ini merekam hasil akhir verifikasi implementasi backend API, modul scraper, dan **antarmuka frontend Next.js** berbasis **shadcn/ui** untuk **Sistem Deteksi & Pencarian Semantik Berita Hoaks**.
 
 ---
 
-## 2. Laporan Hasil Eksekusi Pengujian (Test Results)
+## 1. Tinjauan Hasil Pengujian Backend (`tests/`)
 
-Pengujian dijalankan pada terminal PowerShell dengan perintah:
-```powershell
-pytest "Hoax Detection Web/tests"
-```
+Uji coba diimplementasikan menggunakan `pytest` dan `unittest.mock` untuk memastikan logika API backend dan scraper bebas dari error sintaksis dan berjalan 100% sukses di lingkungan terisolasi.
 
 ### Hasil Log Pengujian (Test Output Log):
 ```text
@@ -43,12 +22,72 @@ Hoax Detection Web\tests\test_scraper.py ....                            [100%]
 ============================== 8 passed in 1.75s ==============================
 ```
 
-### Analisis Hasil:
-*   **Kesesuaian Sintaksis:** Seluruh file kode terverifikasi bebas dari kesalahan penulisan (*syntax error*) Python 3.13.
-*   **Akurasi Logika:** 8 skenario pengujian kritis berhasil dilewati (100% PASS) dengan latensi pengujian yang sangat rendah (1,75 detik) berkat optimasi mocking.
+---
+
+## 2. Desain & Fitur Frontend (`frontend/`)
+
+Antarmuka frontend dirancang dengan gaya **tech-minimalist dark-mode** menggunakan standar desain **shadcn/ui** dan performa tinggi (tanpa visual layout shifts).
+
+### Fitur Utama UI:
+1.  **Asymmetric Two-Column Layout:**
+    *   **Kolom Kiri (Pencarian & Hasil):** Headline bergradasi, formulir pencarian semantik terintegrasi slider nilai kemiripan (`min_score`), batas pengambilan, dan daftar kartu hasil pencarian.
+    *   **Kolom Kanan (Statistik & Data Terbaru):** Kartu metadata Neon DB live (total berita terindeks, tombol re-connect untuk mengantisipasi *cold-start*), daftar 5 berita hoaks terhangat, dan panduan edukasi sistem.
+2.  **Graceful Degradation Alert:** Jika backend berstatus `lexical` (fallback pencarian kata kunci biasa), UI otomatis menampilkan Alert Banner kuning *"Mode Pencarian Darurat Aktif"* untuk menjaga transparansi sistem.
+3.  **Skeleton Loader:** Saat data sedang dimuat, elemen loading skeleton shadcn yang halus akan ditampilkan untuk menjaga kenyamanan visual (*perceived latency*).
+4.  **SEO & A11y Compliant:** Metadata judul dan deskripsi deskriptif tersemat di `layout.tsx`. Setiap tombol aksi interaktif memiliki status tactile `:active` dan kontras rasio WCAG AA minimal 4.5:1.
 
 ---
 
-## 3. Kesimpulan Verifikasi
+## 3. Struktur Berkas Akhir Proyek
 
-Sistem terbukti **100% berfungsi sesuai spesifikasi desain** yang disetujui. Backend siap melayani kueri dari Next.js frontend, dan scraper siap diaktifkan setelah Anda mengonfigurasi API Key Gemini dan kredensial database Neon Anda di berkas `.env` masing-masing modul.
+Proyek telah di-bootstrap lengkap dan di-push ke GitHub di repositori [https://github.com/DiaztMF/Hoax-Detection-Web](https://github.com/DiaztMF/Hoax-Detection-Web):
+
+```
+Hoax Detection Web/
+├── .gitignore               # Mengabaikan berkas kredensial (.env, node_modules)
+├── scraper/
+│   └── hoax_scraper.py      # Script scraper TurnBackHoax.id
+├── backend/
+│   ├── database.py          # Pool database Neon Postgres
+│   └── main.py              # Rest API FastAPI
+├── frontend/
+│   ├── components.json      # Konfigurasi shadcn/ui
+│   └── src/
+│       ├── app/
+│       │   ├── layout.tsx   # Root layout (mengunci tema gelap global)
+│       │   └── page.tsx     # Landing page & Dashboard pencari semantik
+│       └── components/ui/   # Komponen UI: button, card, input, badge, skeleton, alert
+└── tests/
+    ├── test_backend.py      # Pengujian unit backend
+    └── test_scraper.py      # Pengujian unit scraper
+```
+
+---
+
+## 4. Cara Menjalankan Proyek secara Lokal
+
+### Langkah 1: Jalankan Backend & Scraper
+1. Isi berkas `.env` di dalam folder `scraper` dan `backend` dengan database Neon URL dan Gemini API Key Anda.
+2. Jalankan scraper untuk mengisi data pertama kali:
+   ```bash
+   cd "Hoax Detection Web/scraper"
+   pip install -r requirements.txt
+   python hoax_scraper.py
+   ```
+3. Jalankan server FastAPI:
+   ```bash
+   cd "../backend"
+   pip install -r requirements.txt
+   uvicorn main:app --reload
+   ```
+
+### Langkah 2: Jalankan Frontend Next.js
+1. Buka terminal baru dan masuk ke folder frontend:
+   ```bash
+   cd "Hoax Detection Web/frontend"
+   ```
+2. Jalankan server pembangunan Next.js:
+   ```bash
+   npm run dev
+   ```
+3. Buka browser Anda di alamat `http://localhost:3000`. Dashboard antarmuka siap digunakan!
