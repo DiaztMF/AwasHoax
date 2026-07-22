@@ -40,12 +40,13 @@ Antarmuka frontend dirancang dengan gaya **tech-minimalist dark-mode** menggunak
 
 ## 3. Struktur Berkas Akhir Proyek
 
-Proyek telah di-bootstrap lengkap dan di-push ke GitHub di repositori [https://github.com/DiaztMF/Hoax-Detection-Web](https://github.com/DiaztMF/Hoax-Detection-Web):
+Proyek telah di-bootstrap lengkap dan di-push ke GitHub di repositori [https://github.com/DiaztMF/AwasHoax](https://github.com/DiaztMF/AwasHoax):
 
 ```
 Hoax Detection Web/
 ├── .gitignore               # Mengabaikan berkas kredensial (.env, node_modules)
 ├── scraper/
+│   ├── init_db.py           # Script inisialisasi skema tabel & ekstensi vector di Neon DB
 │   └── hoax_scraper.py      # Script scraper TurnBackHoax.id
 ├── backend/
 │   ├── database.py          # Pool database Neon Postgres
@@ -68,17 +69,21 @@ Hoax Detection Web/
 
 ### Langkah 1: Jalankan Backend & Scraper
 1. Isi berkas `.env` di dalam folder `scraper` dan `backend` dengan database Neon URL dan Gemini API Key Anda.
-2. Jalankan scraper untuk mengisi data pertama kali:
+2. Jalankan inisialisasi database Neon (hanya perlu sekali di awal):
    ```bash
    cd "Hoax Detection Web/scraper"
-   pip install -r requirements.txt
+   pip install psycopg2-binary dotenv google-genai
+   python init_db.py
+   ```
+3. Jalankan scraper untuk mengisi data:
+   ```bash
    python hoax_scraper.py
    ```
-3. Jalankan server FastAPI:
+4. Jalankan server FastAPI:
    ```bash
    cd "../backend"
-   pip install -r requirements.txt
-   uvicorn main:app --reload
+   pip install uvicorn fastapi
+   python -m uvicorn main:app --reload
    ```
 
 ### Langkah 2: Jalankan Frontend Next.js
