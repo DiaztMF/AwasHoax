@@ -329,7 +329,7 @@ export default function Home() {
         <section className="lg:col-span-5 flex flex-col gap-6">
           
           {/* Stats Card */}
-          <Card className="bg-card border-border/70 rounded-xl overflow-hidden shadow-[0_2px_12px_-2px_rgba(0,0,0,0.04)] dark:shadow-none">
+          <Card className="bg-card border-border/70 rounded-xl p-0 overflow-hidden shadow-[0_2px_12px_-2px_rgba(0,0,0,0.04)] dark:shadow-none">
             <CardHeader className="bg-muted/30 p-4 border-b border-border/70 flex flex-row items-center gap-3">
               <Database className="size-4 text-emerald-600 dark:text-emerald-500" />
               <div>
