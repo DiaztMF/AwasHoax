@@ -129,15 +129,15 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground flex flex-col font-sans selection:bg-emerald-500/20 selection:text-emerald-500">
+    <div className="min-h-[100dvh] bg-background text-foreground flex flex-col font-sans selection:bg-emerald-500/20 selection:text-emerald-600 dark:selection:text-emerald-400">
       
       {/* 1. Header/Navigation */}
-      <header className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
+      <header className="border-b border-border/60 bg-background/80 backdrop-blur-md sticky top-0 z-50 shadow-[0_1px_3px_rgba(0,0,0,0.02)] dark:shadow-none">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="font-bold text-xl tracking-tight text-foreground flex items-center gap-2">
               AwasHoax 
-              <Badge variant="outline" className="text-[11px] font-normal border-emerald-500/30 text-emerald-500 bg-emerald-500/10">
+              <Badge variant="outline" className="text-[11px] font-normal border-emerald-500/30 text-emerald-700 dark:text-emerald-400 bg-emerald-500/10">
                 Verifikasi Fakta
               </Badge>
             </span>
@@ -149,7 +149,7 @@ export default function Home() {
               variant="outline"
               size="icon"
               onClick={toggleTheme}
-              className="size-9 border-border text-foreground hover:bg-accent rounded-lg transition-colors cursor-pointer"
+              className="size-9 border-border/80 text-foreground hover:bg-accent rounded-lg transition-colors cursor-pointer"
               aria-label="Ubah Tema"
             >
               {isDark ? <Sun className="size-4 text-amber-400" /> : <Moon className="size-4 text-zinc-700" />}
@@ -173,7 +173,7 @@ export default function Home() {
           </div>
 
           {/* Search Form */}
-          <form onSubmit={handleSearch} className="flex flex-col gap-4 bg-card border border-border p-5 rounded-xl shadow-xs">
+          <form onSubmit={handleSearch} className="flex flex-col gap-4 bg-card border border-border/70 p-5 rounded-xl shadow-[0_2px_12px_-2px_rgba(0,0,0,0.04)] dark:shadow-none">
             <div className="flex flex-col gap-2">
               <label htmlFor="search" className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Klaim / Topik Berita</label>
               <div className="relative flex items-center">
@@ -182,7 +182,7 @@ export default function Home() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Ketik klaim berita (contoh: 'vaksin mengandung cip magnetik')..."
-                  className="bg-background border-border text-foreground h-11 pl-10 pr-4 rounded-lg focus-visible:ring-emerald-500/50"
+                  className="bg-muted/30 dark:bg-background border-border/80 text-foreground h-11 pl-10 pr-4 rounded-lg focus-visible:ring-emerald-500/40 focus-visible:bg-background transition-colors"
                 />
                 <Search className="absolute left-3.5 size-4 text-muted-foreground" />
               </div>
@@ -202,7 +202,7 @@ export default function Home() {
                   step="0.05"
                   value={minScore}
                   onChange={(e) => setMinScore(parseFloat(e.target.value))}
-                  className="w-full accent-emerald-500 h-1.5 bg-muted rounded-lg appearance-none cursor-pointer"
+                  className="w-full accent-emerald-600 dark:accent-emerald-500 h-1.5 bg-muted rounded-lg appearance-none cursor-pointer"
                 />
               </div>
 
@@ -217,10 +217,10 @@ export default function Home() {
                       type="button"
                       variant={limit === val ? "default" : "outline"}
                       onClick={() => setLimit(val)}
-                      className={`flex-1 text-xs h-8 rounded-md cursor-pointer ${
+                      className={`flex-1 text-xs h-8 rounded-md cursor-pointer transition-all ${
                         limit === val 
-                          ? "bg-emerald-500 text-white dark:text-zinc-950 hover:bg-emerald-600 border-none font-bold" 
-                          : "border-border text-muted-foreground hover:text-foreground hover:bg-accent"
+                          ? "bg-emerald-600 text-white dark:bg-emerald-500 dark:text-zinc-950 hover:bg-emerald-700 dark:hover:bg-emerald-400 border-none font-bold shadow-xs" 
+                          : "border-border/80 text-muted-foreground hover:text-foreground hover:bg-accent"
                       }`}
                     >
                       {val}
@@ -234,7 +234,7 @@ export default function Home() {
               <Button 
                 type="submit" 
                 disabled={loadingSearch || !query.trim()}
-                className="flex-1 bg-emerald-500 text-white dark:text-zinc-950 hover:bg-emerald-600 h-10 font-bold active:scale-[0.98] transition-transform duration-100 disabled:opacity-50 cursor-pointer"
+                className="flex-1 bg-emerald-600 text-white dark:bg-emerald-500 dark:text-zinc-950 hover:bg-emerald-700 dark:hover:bg-emerald-400 h-10 font-bold active:scale-[0.98] transition-all duration-100 disabled:opacity-50 cursor-pointer shadow-xs"
               >
                 {loadingSearch ? "Memeriksa Data..." : "Cari Klaim Relevan"}
               </Button>
@@ -244,7 +244,7 @@ export default function Home() {
                   type="button" 
                   onClick={handleClearSearch}
                   variant="outline"
-                  className="border-border text-muted-foreground hover:text-foreground hover:bg-accent h-10 cursor-pointer"
+                  className="border-border/80 text-muted-foreground hover:text-foreground hover:bg-accent h-10 cursor-pointer"
                 >
                   Reset
                 </Button>
@@ -256,27 +256,27 @@ export default function Home() {
           {loadingSearch && (
             <div className="flex flex-col gap-4">
               <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Memeriksa Database...</h2>
-              <Skeleton className="h-28 w-full bg-muted rounded-lg" />
-              <Skeleton className="h-28 w-full bg-muted rounded-lg" />
+              <Skeleton className="h-28 w-full bg-muted/60 rounded-lg" />
+              <Skeleton className="h-28 w-full bg-muted/60 rounded-lg" />
             </div>
           )}
 
           {!loadingSearch && searchResults !== null && (
             <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-border pb-2">
+              <div className="flex items-center justify-between border-b border-border/70 pb-2">
                 <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Hasil Verifikasi Berita</h2>
                 <Badge variant={searchMode === "semantic" ? "default" : "destructive"} className={
                   searchMode === "semantic" 
-                    ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/30"
-                    : "bg-amber-500/10 text-amber-500 border border-amber-500/30"
+                    ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30"
+                    : "bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30"
                 }>
                   {searchMode === "semantic" ? "Verifikasi Cerdas" : "Pencarian Kata Kunci"}
                 </Badge>
               </div>
 
               {searchMode === "lexical" && (
-                <Alert className="bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-300">
-                  <AlertTriangle className="size-4 text-amber-500" />
+                <Alert className="bg-amber-500/10 border-amber-500/20 text-amber-800 dark:text-amber-300">
+                  <AlertTriangle className="size-4 text-amber-600 dark:text-amber-500" />
                   <AlertTitle className="font-bold">Pencarian Kata Kunci Aktif</AlertTitle>
                   <AlertDescription className="text-xs leading-normal opacity-90">
                     Pencarian dialihkan ke pencarian kata kunci literal pada database.
@@ -285,8 +285,8 @@ export default function Home() {
               )}
 
               {searchResults.length === 0 ? (
-                <div className="flex flex-col items-center justify-center p-12 bg-card border border-border rounded-xl text-center gap-3">
-                  <ShieldAlert className="size-10 text-muted-foreground opacity-60" />
+                <div className="flex flex-col items-center justify-center p-12 bg-card border border-border/70 rounded-xl text-center gap-3 shadow-[0_2px_12px_-2px_rgba(0,0,0,0.03)] dark:shadow-none">
+                  <ShieldAlert className="size-10 text-muted-foreground opacity-50" />
                   <h3 className="font-bold text-foreground">Tidak Ada Berita Cocok</h3>
                   <p className="text-muted-foreground text-xs max-w-xs leading-normal">
                     Tidak ditemukan data klarifikasi berita hoaks dengan tingkat keakuratan di atas {(minScore * 100).toFixed(0)}%. Silakan coba turunkan tingkat keakuratan atau gunakan kata kunci lain.
@@ -295,11 +295,11 @@ export default function Home() {
               ) : (
                 <div className="flex flex-col gap-4">
                   {searchResults.map((item) => (
-                    <Card key={item.id} className="bg-card border-border hover:border-emerald-500/40 transition-colors duration-150 rounded-xl">
+                    <Card key={item.id} className="bg-card border-border/70 hover:border-emerald-500/40 transition-colors duration-150 rounded-xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.03)] dark:shadow-none">
                       <CardHeader className="p-4 pb-2 flex flex-row items-start justify-between gap-4">
                         <div className="flex flex-col gap-1">
                           <span className="text-[11px] text-muted-foreground">{item.publish_date || "Tanggal tidak diketahui"}</span>
-                          <CardTitle className="text-base font-bold text-foreground hover:text-emerald-500 transition-colors duration-150 leading-snug">
+                          <CardTitle className="text-base font-bold text-foreground hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-150 leading-snug">
                             <a href={item.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5">
                               {item.title}
                               <ExternalLink className="size-3.5 inline-block shrink-0 text-muted-foreground" />
@@ -307,7 +307,7 @@ export default function Home() {
                           </CardTitle>
                         </div>
                         {item.similarity_score !== undefined && (
-                          <Badge className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-mono text-[11px] py-0.5 px-2 shrink-0">
+                          <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 font-mono text-[11px] py-0.5 px-2 shrink-0">
                             {(item.similarity_score * 100).toFixed(0)}% Cocok
                           </Badge>
                         )}
@@ -329,9 +329,9 @@ export default function Home() {
         <section className="lg:col-span-5 flex flex-col gap-6">
           
           {/* Stats Card */}
-          <Card className="bg-card border-border rounded-xl overflow-hidden shadow-xs">
-            <CardHeader className="bg-muted/40 p-4 border-b border-border flex flex-row items-center gap-3">
-              <Database className="size-4 text-emerald-500" />
+          <Card className="bg-card border-border/70 rounded-xl overflow-hidden shadow-[0_2px_12px_-2px_rgba(0,0,0,0.04)] dark:shadow-none">
+            <CardHeader className="bg-muted/30 p-4 border-b border-border/70 flex flex-row items-center gap-3">
+              <Database className="size-4 text-emerald-600 dark:text-emerald-500" />
               <div>
                 <CardTitle className="text-sm font-bold text-foreground">Pusat Data Klarifikasi</CardTitle>
                 <CardDescription className="text-[11px] text-muted-foreground">Data Terverifikasi</CardDescription>
@@ -340,32 +340,32 @@ export default function Home() {
             <CardContent className="p-5 flex flex-col gap-4">
               {loadingStats ? (
                 <div className="flex flex-col gap-2">
-                  <Skeleton className="h-8 w-24 bg-muted" />
-                  <Skeleton className="h-4 w-40 bg-muted" />
+                  <Skeleton className="h-8 w-24 bg-muted/60" />
+                  <Skeleton className="h-4 w-40 bg-muted/60" />
                 </div>
               ) : dbError ? (
                 <div className="flex flex-col gap-2">
-                  <span className="text-xs text-amber-500 flex items-center gap-1.5 font-semibold">
+                  <span className="text-xs text-amber-600 dark:text-amber-500 flex items-center gap-1.5 font-semibold">
                     <AlertTriangle className="size-4" />
                     Server Belum Merespon
                   </span>
                   <p className="text-[11px] text-muted-foreground leading-normal">
                     Server sedang memuat data awal. Silakan coba hubungkan ulang.
                   </p>
-                  <Button onClick={fetchStats} size="sm" variant="outline" className="mt-2 text-xs border-border hover:bg-accent text-muted-foreground hover:text-foreground gap-1.5 h-8 cursor-pointer">
+                  <Button onClick={fetchStats} size="sm" variant="outline" className="mt-2 text-xs border-border/80 hover:bg-accent text-muted-foreground hover:text-foreground gap-1.5 h-8 cursor-pointer">
                     <RefreshCw className="size-3.5" /> Hubungkan Ulang
                   </Button>
                 </div>
               ) : (
                 <div className="flex flex-col gap-3">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-extrabold text-emerald-500 font-mono">
+                    <span className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-500 font-mono">
                       {stats?.total_hoaxes ?? 0}
                     </span>
                     <span className="text-xs text-muted-foreground font-medium">Total Berita Terverifikasi</span>
                   </div>
                   
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground border-t border-border pt-3">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground border-t border-border/70 pt-3">
                     <TrendingUp className="size-4 text-muted-foreground opacity-70" />
                     <span>Diperbarui secara otomatis dari sumber tepercaya</span>
                   </div>
@@ -376,7 +376,7 @@ export default function Home() {
 
           {/* Latest Articles List */}
           <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between border-b border-border pb-2">
+            <div className="flex items-center justify-between border-b border-border/70 pb-2">
               <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                 <Newspaper className="size-3.5 text-muted-foreground" />
                 Klarifikasi Hoaks Terbaru
@@ -386,12 +386,12 @@ export default function Home() {
 
             {loadingLatest ? (
               <div className="flex flex-col gap-3">
-                <Skeleton className="h-16 w-full bg-muted rounded-lg" />
-                <Skeleton className="h-16 w-full bg-muted rounded-lg" />
-                <Skeleton className="h-16 w-full bg-muted rounded-lg" />
+                <Skeleton className="h-16 w-full bg-muted/60 rounded-lg" />
+                <Skeleton className="h-16 w-full bg-muted/60 rounded-lg" />
+                <Skeleton className="h-16 w-full bg-muted/60 rounded-lg" />
               </div>
             ) : dbError || latestHoaxes.length === 0 ? (
-              <div className="flex items-center gap-2 p-4 bg-card border border-border rounded-lg text-muted-foreground text-xs justify-center text-center">
+              <div className="flex items-center gap-2 p-4 bg-card border border-border/70 rounded-lg text-muted-foreground text-xs justify-center text-center">
                 <Info className="size-4 text-muted-foreground" />
                 <span>Belum ada data berita yang dimuat.</span>
               </div>
@@ -400,17 +400,17 @@ export default function Home() {
                 {latestHoaxes.map((item) => (
                   <div 
                     key={item.id} 
-                    className="p-3.5 bg-card border border-border hover:border-emerald-500/40 transition-all duration-150 rounded-xl flex flex-col gap-1.5"
+                    className="p-3.5 bg-card border border-border/70 hover:border-emerald-500/40 transition-all duration-150 rounded-xl flex flex-col gap-1.5 shadow-[0_1px_4px_rgba(0,0,0,0.02)] dark:shadow-none"
                   >
                     <div className="flex items-center justify-between text-[10px] text-muted-foreground">
                       <span>{item.publish_date || "Klarifikasi Baru"}</span>
-                      <span className="text-emerald-500 font-medium">Terverifikasi</span>
+                      <span className="text-emerald-600 dark:text-emerald-500 font-medium">Terverifikasi</span>
                     </div>
                     <a 
                       href={item.url} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="text-xs font-bold text-foreground hover:text-emerald-500 transition-colors duration-150 leading-snug flex items-start gap-1"
+                      className="text-xs font-bold text-foreground hover:text-emerald-600 dark:hover:text-emerald-500 transition-colors duration-150 leading-snug flex items-start gap-1"
                     >
                       {item.title}
                       <ExternalLink className="size-3 shrink-0 text-muted-foreground mt-0.5" />
@@ -425,7 +425,7 @@ export default function Home() {
       </main>
 
       {/* 4. Footer */}
-      <footer className="border-t border-border bg-background mt-auto">
+      <footer className="border-t border-border/70 bg-background mt-auto">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
           <span>&copy; 2026 AwasHoax. All rights reserved.</span>
           <div className="flex gap-4">
