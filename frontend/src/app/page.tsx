@@ -138,10 +138,6 @@ export default function Home() {
       <header className="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {/* Monogram Logo SVG */}
-            <div className="size-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold font-mono tracking-tighter">
-              AH
-            </div>
             <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-zinc-50 to-zinc-400 bg-clip-text text-transparent">
               AwasHoax <span className="text-emerald-400 font-normal text-sm font-mono ml-1">Semantik v1</span>
             </span>
@@ -194,8 +190,8 @@ export default function Home() {
             </div>
 
             {/* Advanced Filters Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+              <div className="flex flex-col gap-5">
                 <div className="flex items-center justify-between">
                   <label htmlFor="minScore" className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Skor Kemiripan Min: {(minScore * 100).toFixed(0)}%</label>
                   <span className="text-[10px] text-zinc-500 font-mono">Ambang Batas</span>
@@ -449,8 +445,6 @@ export default function Home() {
           <span>&copy; 2026 AwasHoax. All rights reserved.</span>
           <div className="flex gap-4">
             <a href="https://turnbackhoax.id" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400">TurnBackHoax</a>
-            <span>&middot;</span>
-            <a href="https://www.kaggle.com/docs/mcp" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400">Kaggle MCP</a>
           </div>
         </div>
       </footer>
